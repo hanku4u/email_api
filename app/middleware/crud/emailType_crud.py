@@ -44,3 +44,22 @@ def delete_email_type(db: Session, email_type_id: int):
     db.delete(db_email_type)
     db.commit()
     return db_email_type
+
+
+# Define the function to get a list of emails subscribed to a specific email type
+def get_subscriptions_by_emailID(db: Session, email_type_id: int) -> List[str]:
+    
+    # Query the database for all email addresses subscribed to the specified email type
+    emails = (
+        db.query(models.User.email)   # Select email addresses from User table
+        .join(models.UserEmailType)   # Join UserEmailType table
+        .join(models.EmailType)       # Join EmailType table
+        .filter(models.EmailType.id == email_type_id)  # Filter for the specific email type
+        .all()
+    )
+
+    # Extract email addresses from the query result
+    email_list = [email[0] for email in emails]
+
+    # Return the list of email addresses
+    return email_list

@@ -52,10 +52,26 @@ def update_email_type(
 
 
 # Endpoint to delete an email type by ID
-@emailType_router.delete("/email-types/{email_type_id}", response_model=schemas.EmailType)
+@emailType_router.delete("/email_types/{email_type_id}", response_model=schemas.EmailType)
 def delete_email_type(email_type_id: int, db: Session = Depends(get_db)):
     db_email_type = crud.get_email_type(db, email_type_id=email_type_id)
     if db_email_type is None:
         raise HTTPException(status_code=404, detail="Email type not found")
     db_email_type = crud.delete_email_type(db, email_type_id=email_type_id)
     return db_email_type
+
+
+# Endpoint to get all email addresses subscribed to an email type
+@emailType_router.get("/email_types/{email_type_id}/subscriptions", response_model=List)
+def get_subscriptions_by_email_type(email_type_id: int, db: Session = Depends(get_db)):
+    
+    # Check that the email type exists
+    email_type = crud.get_email_type(db, email_type_id=email_type_id)
+    if not email_type:
+        raise HTTPException(status_code=404, detail="Email type not found")
+
+    # Get the users subscribed to the email type
+    email_distro = crud.get_subscriptions_by_emailID(db, email_type_id=email_type_id)
+    
+    # return a list of email addresses subscribed to the email type
+    return email_distro
