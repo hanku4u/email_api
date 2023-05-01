@@ -8,7 +8,7 @@ Create Date: 2023-04-30 13:26:32.475125
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.orm import Session
-from app.api.models import Item, EmailType, User, UserEmailType
+from app.models.models import Item, EmailType, User, UserEmailType
 from app.database import SessionLocal
 
 

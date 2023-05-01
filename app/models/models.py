@@ -1,9 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+from app.database import Base
 
-# Create a declarative base class for database models
-Base = declarative_base()
 
 # Define an Item model that inherits from declarative base class for database
 class Item(Base):

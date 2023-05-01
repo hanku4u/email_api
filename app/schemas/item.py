@@ -1,6 +1,7 @@
 from typing import List, Optional
 from pydantic import BaseModel
 
+
 # Base model for item fields
 class ItemBase(BaseModel):
 
@@ -32,40 +33,3 @@ class ItemList(BaseModel):
 
     # Define a list of Item objects as the output field
     items: List[Item]
-
-
-# Model for email types
-class EmailTypeBase(BaseModel):
-    name: str
-
-class EmailTypeCreate(EmailTypeBase):
-    pass
-
-class EmailType(EmailTypeBase):
-    id: int
-
-    class Config:
-        orm_mode = True
-
-
-# Model for users
-class UserBase(BaseModel):
-    name: str
-    email: str
-
-class UserCreate(UserBase):
-    pass
-
-class User(UserBase):
-    id: int
-    subscribed: bool
-    email_types: List[EmailType] = []
-
-    class Config:
-        orm_mode = True
-
-
-# Model for users and their subscribed email types
-class UserEmailTypes(BaseModel):
-    user: User
-    email_types: List[EmailType] = []
