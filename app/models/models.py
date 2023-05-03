@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from app.database import Base
+from datetime import datetime
 
 
 # Define an Item model that inherits from declarative base class for database

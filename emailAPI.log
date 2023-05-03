@@ -1,0 +1,6 @@
+INFO:logger:Endpoint: /get_user/1
+03-May-23 16:22:20 - INFO - Endpoint: /get_user/1
+03-May-23 16:22:22 - INFO - Endpoint: /get_user/1
+03-May-23 16:22:26 - DEBUG - Endpoint: /get_user/10, Method: GET, Status: Failed
+03-May-23 16:22:33 - DEBUG - Endpoint: /get_user/1000, Method: GET, Status: Failed
+03-May-23 16:22:40 - DEBUG - Endpoint: /get_user/20, Method: GET, Status: Failed

@@ -5,6 +5,7 @@ import app.schemas.user as schemas
 import app.middleware.crud.user_crud as user_crud
 import app.middleware.crud.emailType_crud as email_type_crud
 import app.database as database
+from logger import logger
 
 user_router = APIRouter()
 
@@ -21,6 +22,7 @@ def get_db():
 @user_router.post("/create_user", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = user_crud.create_user(db, user)
+    logger.info('Endpoint: /create_user, Method: POST, Status: Success')
     return db_user
 
 
@@ -29,7 +31,10 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = user_crud.get_user(db, user_id=user_id)
     if db_user is None:
+        logger.error(f'Endpoint: /get_user/{user_id}, Method: GET, Status: Failed')
         raise HTTPException(status_code=404, detail="User not found")
+    
+    logger.info(f'Endpoint: /get_user/{user_id}')
     return db_user
 
 
@@ -41,15 +46,6 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 
 # # Endpoint to update a user by ID
-# @user_router.put("/update_user/{user_id}", response_model=schemas.User)
-# def update_user(user_id: int, user: schemas.User, db: Session = Depends(get_db)):
-#     db_user = user_crud.get_user(db, user_id=user_id)
-#     if db_user is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     db_user = user_crud.update_user(db, user_id=user_id, user=user)
-#     return db_user
-
-
 @user_router.put("/update_user/{user_id}", response_model=schemas.User)
 def update_user(user_id: int, user_update: schemas.UserUpdate, db: Session = Depends(get_db)):
     db_user = user_crud.get_user(db, user_id=user_id)

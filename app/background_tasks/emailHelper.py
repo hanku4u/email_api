@@ -20,14 +20,24 @@ class EmailHelper:
         # Add body to email
         msg.attach(MIMEText(body, 'html'))
 
-        # Open connection to SMTP server and login
-        smtp_server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-        smtp_server.starttls()
-        smtp_server.login(self.email, self.password)
+        try:
+            # Open connection to SMTP server and login
+            smtp_server = smtplib.SMTP(self.smtp_server, self.smtp_port)
+            smtp_server.starttls()
+            smtp_server.login(self.email, self.password)
 
-        # Send email and close connection
-        smtp_server.sendmail(self.email, to, msg.as_string())
-        smtp_server.quit()
+            # Send email and close connection
+            smtp_server.sendmail(self.email, to, msg.as_string())
+            smtp_server.quit()
+        except smtplib.SMTPException as e:
+            # Handle SMTP errors
+            print(f"Error: {e}")
+            raise Exception("Failed to send email")
+        except Exception as e:
+            # Handle other errors
+            print(f"Error: {e}")
+            raise Exception("Failed to send email")
+
 
 
     # generate an HTML email body with the specified title and message
