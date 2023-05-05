@@ -48,6 +48,39 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
+# Endpoint to search for user by last name
+@user_router.get("/find_user/{user_name}", response_model=List)
+def find_user_by_name(user_name: str, db: Session = Depends(get_db)):
+    # check DB for the name that was passed
+    found_user = user_crud.find_user_by_name(queryName=user_name, db=db)
+
+    if found_user == ["No users found"]:
+        # log failure
+        logger.error(f'Endpoint: /find_user, User Name:{user_name}, Method: GET, Status: Failed, User Name not found')
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # log success
+    logger.info(f'Endpoint: /find_user, User Name:{user_name}, Method: GET, Status: Success')
+
+    return found_user
+
+
+@user_router.get("find_dept/{dept_name}", response_model=List)
+def find_users_by_dept(dept_name: str, db: Session = Depends(get_db)):
+    # check DB for department name passed
+    found_dept = user_crud.find_user_by_dept(queryDept=dept_name, db=db)
+
+    if found_dept == ["No users found"]:
+        # log failure
+        logger.error(f'Endpoint: /find_dept, Dept Name:{dept_name}, Method: GET, Status: Failed, Department not found')
+        raise HTTPException(status_code=404, detail="Department not found")
+
+    # log success
+    logger.info(f'Endpoint: /find_dept, Dept Name:{dept_name}, Method: GET, Status: Success')
+
+    return found_dept
+
+
 # Endpoint to get all users with optional pagination
 @user_router.get("/all_users", response_model=List[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -121,7 +154,7 @@ def subscribe_user_to_email_types(
         logger.error(f'Endpoint: /update_user/id/subscribe, User ID:{email_type_ids}, Method: POST, Status: Failed, Email ID not found')
         raise HTTPException(status_code=404, detail="Email types not found")
     
-    # Get the ids of the email types and put them in a list
+    # After verifying email IDs exists, put them in a list
     found_email_ids = [email_type.id for email_type in email_types]
 
     # Subscribe the user to the email types
@@ -129,4 +162,34 @@ def subscribe_user_to_email_types(
 
     # log success
     logger.info(f'Endpoint: /update_user/id/subscribe, User ID:{user_id}, Method: POST, Status: Success')
+    return result
+
+
+# Endpoint to unsubscribe a user from an email type
+@user_router.post("/update_user/{user_id}/unsubscribe", response_model=schemas.User)
+def unsubscribe_email_type(
+    user_id: int, 
+    email_type_id: List[int],
+    db: Session = Depends(get_db)
+):
+    # Check that the user exists
+    user = user_crud.get_user(db, user_id=user_id)
+    if not user:
+        # log failure
+        logger.error(f'Endpoint: /update_user/id/unsubscribe, User ID:{user_id}, Method: POST, Status: Failed, User ID not found')
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Check that email type exists
+    email_type = email_type_crud.get_email_types_by_ids(db, email_type_id)
+    if not email_type:
+        # log failure
+        logger.error(f'Endpoint: /update_user/id/unsubscribe, Email ID:{email_type_ids}, Method: POST, Status: Failed, Email ID not found')
+        raise HTTPException(status_code=404, detail="Email type not found")
+
+    # Unsubscribe the user from the email type
+    result = user_crud.unsubscribe_email_type(db=db, userID=user.id, email_type_id=email_type_id)
+
+    # log success
+    logger.info(f'Endpoint: /update_user/id/unsubscribe, User ID:{user_id}, Method: POST, Status: Success')
+
     return result
