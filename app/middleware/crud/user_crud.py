@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 import app.models.models as models
 import app.schemas.user as schemas
 from typing import List
+from logger import logger
 
 
 # CRUD functions for users
@@ -29,6 +30,27 @@ def get_user(db: Session, user_id: int):
 
     # Query the database for a user with the specified ID and return the first result
     return db.query(models.User).filter(models.User.id == user_id).first()
+
+
+# Find a user by name
+def find_user_by_name(queryName: str, db: Session):
+    user = db.query(models.User).filter(models.User.last_name.like(f'%{queryName}%')).all()
+
+    if len(user) == 0:
+        return ["No users found"]
+    
+    if user is not None:
+        return user
+
+
+# Find a users by department
+def find_user_by_dept(queryDept: str, db: Session):
+    users = db.query(models.User).filter(models.User.dept_name.like(f'%{queryDept}%')).all()
+
+    if len(users) == 0:
+        return ["No users found"]
+    else:
+        return users
 
 
 # Get all users from the database
@@ -100,19 +122,55 @@ def subscribe_user_to_email_types(db: Session, userID: int, email_type_ids: List
     if not user:
         return None
 
-    # Loop through the email_type_ids list and add new UserEmailType objects to the database for each email type
+    # get a list of emails user is already subscribed to
+    subscribed_emails = []
+    for email_type in user.email_types:
+        subscribed_emails.append(email_type.id)
+
+    # if email ID that was passed is not subscribed add it to an updated list
+    updated_email_ids = []
     for email_id in email_type_ids:
+        if email_id not in subscribed_emails:
+            updated_email_ids.append(email_id)
 
-        # Create a new UserEmailType object with the current user's ID and the current email type's ID
-        user_email_type = models.UserEmailType(user_id=userID, email_type_id=email_id)
+    # Loop through the updated list of email IDs and add new UserEmailType objects to the database for each email type
+    if len(updated_email_ids) == 0:
+        pass
+    else:
+        for email_id in updated_email_ids:
 
-        # Add the UserEmailType object to the database
-        db.add(user_email_type)
+            # Create a new UserEmailType object with the current user's ID and the current email type's ID
+            user_email_type = models.UserEmailType(user_id=userID, email_type_id=email_id)
 
-        # Commit the changes to the database
+            # Add the UserEmailType object to the database
+            db.add(user_email_type)
+
+            # Commit the changes to the database
+            db.commit()
+
+    # Refresh the user object to get the latest version from the database
+    db.refresh(user)
+    
+    return user # Return the updated user object
+
+
+# CRUD function to unsubscribe a user from an email type
+def unsubscribe_email_type(db: Session, userID: int, email_type_id: List[int]):
+    # Get the user object from the database by ID
+    user = db.query(models.User).filter(models.User.id == userID).first()
+    if not user:
+        return None
+
+    # delete the record in UserEmailType table
+    for email_id in email_type_id:
+        record = db.query(models.UserEmailType).get((userID, email_id))
+
+        db.delete(record)
+
         db.commit()
 
     # Refresh the user object to get the latest version from the database
     db.refresh(user)
-    # Return the updated user object
+
     return user
+
