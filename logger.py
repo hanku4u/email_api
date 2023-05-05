@@ -2,17 +2,23 @@ import logging
 import sys
 from colorlog import ColoredFormatter
 from datetime import date
-
-today = str(date.today())
-fileName = f"/mnt/n.haight/s3/emailAPI/logs/emailAPI-{today}.log"
+import os
 
 
 def create_logger():
+    # setup file name for log file
+    today = str(date.today())
+    fileName = f"/mnt/n.haight/s3/emailAPI/logs/emailAPI-{today}.log"
+
+    # get user name
+    user = os.environ['USER_NAME']
+
+    # setup logger
     logger = logging.getLogger(__name__)
     logging.basicConfig(
         filename=fileName,
         filemode='a',
-        format='%(asctime)s -- %(levelname)s -- %(message)s',
+        format=f'%(asctime)s -- %(levelname)s -- %(message)s -- {user}',
         datefmt='%d-%b-%y %H:%M:%S',
         )
     logger.setLevel(logging.DEBUG)
@@ -42,4 +48,5 @@ def create_logger():
     return logger
 
 
+# instantiate logger
 logger = create_logger()
