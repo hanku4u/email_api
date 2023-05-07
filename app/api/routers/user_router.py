@@ -6,6 +6,7 @@ import app.middleware.crud.user_crud as user_crud
 import app.middleware.crud.emailType_crud as email_type_crud
 import app.database as database
 from logger import logger
+from app import oauth2
 
 user_router = APIRouter()
 
@@ -95,7 +96,12 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 # Endpoint to update a user by ID
 @user_router.put("/update_user/{user_id}", response_model=schemas.User)
-def update_user_by_id(user_id: int, user_update: schemas.UserUpdate, db: Session = Depends(get_db)):
+def update_user_by_id(
+    user_update: schemas.UserUpdate,
+    user_id: int,
+    current_user: int = Depends(oauth2.get_current_user),
+    db: Session = Depends(get_db),
+    ):
     # look up user_id that was passed exists
     db_user = user_crud.get_user(db, user_id=user_id)
 

@@ -20,7 +20,7 @@ class UserCreate(UserBase):
     pass
 
 
-class UserUpdate(UserBase):
+class UserUpdate(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
     dept_name: Optional[str]
@@ -52,3 +52,14 @@ class UserEmailTypes(BaseModel):
 class UserLogin(BaseModel):
     email: str
     password: str
+
+
+# model for token response
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+# model for token data
+class TokenData(BaseModel):
+    user_id: Optional[str] = None

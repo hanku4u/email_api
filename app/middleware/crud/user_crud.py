@@ -67,9 +67,6 @@ def update_user(db: Session, user_id: int, user: schemas.User):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
 
     # Update the user object with the new data. skip if it is not passed
-    if user.ghr_id is not None:
-        db_user.ghr_id = user.ghr_id
-
     if user.first_name is not None:
         db_user.first_name = user.first_name
 
@@ -87,9 +84,6 @@ def update_user(db: Session, user_id: int, user: schemas.User):
 
     if user.email is not None:
         db_user.email = user.email
-
-    if user.subscribed is not None:
-        db_user.subscribed = user.subscribed
 
     db.commit() # Commit the session to save the changes to the database
 
