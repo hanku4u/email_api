@@ -1,25 +1,27 @@
 # Items updated at home
 
-## user.py
-- updated base user model
+## pip install passlib
+-passlib[bcrypt]
 
+## pip install pip install python-jose
+- pip install python-jose[cryptography]
+- this is for generating JWT tokens
 
-## user_crud.py
-- updated update_user function
+## admin_router
+- added admin router with endpoint to login
+- 
 
+## utils.py
+- added utilities file
+- added hash function to hash passwords
+- added verify function that will verify hashed pw against hashed pw in the DB
+- put the get_db function here
 
-## user_router.py
-- updated Endpoint to update a user by ID
+## models.py
+- add user_roles table
+- add hashed password column to users. this will be a default for everyone except admins
+- add column (relationship) to user table that identifies the users roles.
 
-
-## background_tasks/emailHelper.py
-- added emailHelper class. 
-- need to add a lot more functionality to this class 
-- has a generate html function that needs css styling
-
-## logger.py
-- added logger
-
-
-## emailAPI.log
-- logging will log to this file
+## users.py
+- update user model and table to add exrtra columns
+- added class for UserLogin

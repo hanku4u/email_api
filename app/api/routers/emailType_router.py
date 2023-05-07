@@ -61,7 +61,7 @@ def read_email_types(skip: int = 0, limit: int = 100, db: Session = Depends(get_
 # Endpoint to update an email type by ID
 @emailType_router.put("/update_email/{email_type_id}", response_model=schemas.EmailType)
 def update_email_type(
-    email_type_id: int, email_type: schemas.EmailTypeUpdate, db: Session = Depends(get_db)
+    email_type_id: int, email_type: schemas.EmailType, db: Session = Depends(get_db)
 ):
     # check db if email ID exists
     db_email_type = crud.get_email_type(db, email_type_id=email_type_id)

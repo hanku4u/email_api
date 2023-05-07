@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     )  # count of cache items
 
     # database settings
-    DATABASE_URI: str = Field(None, env="DATABASE_URI")
+    DATABASE_URI: str = Field("sqlite:///./emails.sqlite")
 
     class Config:
         # choose the .env file depending on how the api is being executed

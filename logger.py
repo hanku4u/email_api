@@ -8,17 +8,17 @@ import os
 def create_logger():
     # setup file name for log file
     today = str(date.today())
-    fileName = f"/mnt/n.haight/s3/emailAPI/logs/emailAPI-{today}.log"
+    fileName = f"emailAPI-{today}.log"
 
     # get user name
-    user = os.environ['USER_NAME']
+    # user = os.environ['USER_NAME']
 
     # setup logger
     logger = logging.getLogger(__name__)
     logging.basicConfig(
         filename=fileName,
         filemode='a',
-        format=f'%(asctime)s -- %(levelname)s -- %(message)s -- {user}',
+        format=f'%(asctime)s -- %(levelname)s -- %(message)s',
         datefmt='%d-%b-%y %H:%M:%S',
         )
     logger.setLevel(logging.DEBUG)

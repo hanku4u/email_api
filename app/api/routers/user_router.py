@@ -183,7 +183,7 @@ def unsubscribe_email_type(
     email_type = email_type_crud.get_email_types_by_ids(db, email_type_id)
     if not email_type:
         # log failure
-        logger.error(f'Endpoint: /update_user/id/unsubscribe, Email ID:{email_type_ids}, Method: POST, Status: Failed, Email ID not found')
+        logger.error(f'Endpoint: /update_user/id/unsubscribe, Email ID:{email_type_id}, Method: POST, Status: Failed, Email ID not found')
         raise HTTPException(status_code=404, detail="Email type not found")
 
     # Unsubscribe the user from the email type

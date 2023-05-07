@@ -37,12 +37,21 @@ class User(Base):
     """
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), index=True)
-    email = Column(String(50), unique=True, index=True)
+    ghr_id = Column(String(50))
+    first_name = Column(String(50))
+    last_name = Column(String(50))
+    dept_name = Column(String(50))
+    status = Column(String(20))
+    title = Column(String(100))
+    email = Column(String(50), unique=True)
+    hashed_pw = Column(String(128)) # hashed password for the user
     # add a boolean field to indicate whether or not the user is subscribed to emails
     subscribed = Column(Boolean, default=True)
+
     # add a relationship to the email_types table
     email_types = relationship("EmailType", secondary="user_email_types", backref="users")
+    # add a relationship to the user_roles table
+    roles = relationship("UserRoles", back_populates="user")
 
 
 class UserEmailType(Base):
@@ -56,3 +65,18 @@ class UserEmailType(Base):
     __tablename__ = "user_email_types"
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     email_type_id = Column(Integer, ForeignKey("email_types.id"), primary_key=True)
+
+
+class UserRoles(Base):
+    """
+    Define a model for the user_roles table. This will contain user roles
+    (i.e. 'user' or 'admin').
+    """
+    __tablename__ = "user_roles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    is_admin = Column(Boolean, default=False)
+
+    # add a relationship to the users table
+    user = relationship("User", back_populates="roles")

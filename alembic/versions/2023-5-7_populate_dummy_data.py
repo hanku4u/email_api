@@ -1,20 +1,17 @@
 """populate dummy data
 
-Revision ID: 9ff2c5b24efa
-Revises: ac548a1becae
-Create Date: 2023-04-30 13:26:32.475125
+Revision ID: fe3e3f1fbc2f
+Revises: 95cee7a1fa55
+Create Date: 2023-05-07 12:26:54.941126
 
 """
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.orm import Session
-from app.models.models import Item, EmailType, User, UserEmailType
-from app.database import SessionLocal
 
 
 # revision identifiers, used by Alembic.
-revision = '9ff2c5b24efa'
-down_revision = 'ac548a1becae'
+revision = 'fe3e3f1fbc2f'
+down_revision = '95cee7a1fa55'
 branch_labels = None
 depends_on = None
 
@@ -40,13 +37,22 @@ def upgrade() -> None:
 
         # add users
     op.execute("""
-        INSERT INTO users (name, email, subscribed) 
+        INSERT INTO users (
+            ghr_id,
+            first_name,
+            last_name,
+            dept_name,
+            status,
+            title,
+            email,
+            hashed_pw,
+            subscribed) 
         VALUES 
-            ('John Smith', 'john@example.com', 1),
-            ('Jane Doe', 'jane@example.com', 1),
-            ('Douche Bag', 'douche@example.com', 1),
-            ('Flim Flam', 'flim@example.com', 1),
-            ('Bob Johnson', 'bob@example.com', 1);
+            ('11111111', 'John', 'Smith', 'dept1', 'active', 'title', 'john@example.com', 'password', 1),
+            ('22222222', 'Jane', 'Doe', 'dept2', 'active', 'title', 'jane@example.com', 'password', 1),
+            ('33333333', 'douche', 'bag', 'dept3', 'active', 'title', 'douche@example.com', 'password', 1),
+            ('44444444', 'Flim', 'Flam', 'dept4', 'active', 'title', 'flim@example.com', 'password', 1),
+            ('55555555', 'Bob', 'Johnson', 'dept4', 'active', 'title', 'bob@example.com', 'password', 1);
         """)
     
     # associate users with emails types

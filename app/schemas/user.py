@@ -12,6 +12,7 @@ class UserBase(BaseModel):
     status: Optional[str]
     title: Optional[str]
     email: Optional[str]
+    hashed_pw: Optional[str]
     subscribed: Optional[bool]
 
 
@@ -20,11 +21,21 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(UserBase):
-    pass
+    first_name: Optional[str]
+    last_name: Optional[str]
+    dept_name: Optional[str]
+    status: Optional[str]
+    title: Optional[str]
+    email: Optional[str]
 
 
 class User(UserBase):
     id: int
+    ghr_id: str
+    first_name: str
+    last_name: str
+    dept_name: str
+    title: str
     subscribed: bool
     email_types: List[EmailType] = []
 
@@ -36,3 +47,8 @@ class User(UserBase):
 class UserEmailTypes(BaseModel):
     user: User
     email_types: List[EmailType] = []
+
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
