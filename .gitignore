@@ -2,3 +2,7 @@
 __pycache__/
 alembic/__pycache__/
 app/__pycache__
+emails.sqlite-shm
+emails.sqlite-wal
+.log
+test.py

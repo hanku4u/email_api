@@ -79,3 +79,5 @@ def get_current_user(token: str = Depends(oauth2_scheme), db = Depends(utils.get
 
     # get the user from the database
     user = db.query(models.User).filter(models.User.id == token.user_id).first()
+
+    return user.id # return the user verified by the token

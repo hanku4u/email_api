@@ -102,6 +102,12 @@ def update_user_by_id(
     current_user: int = Depends(oauth2.get_current_user),
     db: Session = Depends(get_db),
     ):
+    # check user_id from token matches user_id passed
+    if current_user != user_id:
+        # log failure
+        logger.error(f'Endpoint: /update_user, User ID:{user_id}, Method: GET, Status: Failed, ID not found')
+        raise HTTPException(status_code=404, detail="wrong user ID")
+
     # look up user_id that was passed exists
     db_user = user_crud.get_user(db, user_id=user_id)
 
