@@ -1,3 +1,9 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+import base64
+from io import BytesIO
+
+
 #write a function that will data a dataframe and create a seaborn grouped bar chart. The chart should have a line chart at the top as well
 # the function should save the chart as a base64 string and return it
 def grouped_bar_chart(df, x, y, hue, title, xlabel, ylabel, legend_title, legend_labels, line_x, line_y, line_label):
@@ -21,7 +27,7 @@ def grouped_bar_chart(df, x, y, hue, title, xlabel, ylabel, legend_title, legend
     ax.legend(title=legend_title, labels=legend_labels)
     
     # save the figure as a base64 string
-    figdata = utils.fig_to_base64(fig)
+    figdata = fig_to_base64(fig)
     
     # return the base64 string
     return figdata
