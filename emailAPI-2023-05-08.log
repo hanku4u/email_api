@@ -1,5 +1,0 @@
-08-May-23 08:42:55 -- ERROR -- 1 validation error for Request body -> username field required (type=value_error.missing) -- http://127.0.0.1:8000/admin/admin_login
-08-May-23 08:44:22 -- INFO -- Endpoint: /update_user, User ID:2, Method: GET, Success
-08-May-23 09:01:10 -- INFO -- Endpoint: /update_user, User ID:2, Method: GET, Success
-08-May-23 10:34:02 -- ERROR -- Endpoint: /update_user, User ID:2, Method: GET, Status: Failed, ID not found
-08-May-23 10:34:46 -- INFO -- Endpoint: /update_user, User ID:1, Method: GET, Success
