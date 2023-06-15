@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 import app.schemas.email_type as schemas
 import app.middleware.crud.emailType_crud as crud
@@ -121,3 +121,17 @@ def get_subscriptions_by_email_type(email_type_id: int, db: Session = Depends(ge
     
     # return a list of email addresses subscribed to the email type
     return email_distro
+
+
+# endpoint that will get results from get_subscriptions_by_email_type and then use background tasks to run a function
+@emailType_router.get("/get_email/{email_type_id}/subscriptions")
+def run_function(email_type_id: int, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    # get email addresses subscribed to email type
+    email_distro = get_subscriptions_by_email_type(email_type_id, db)
+
+    # run function in background tasks
+    background_tasks.add_task(crud.send_email, email_distro)
+
+    # return success message
+    return {"Emails sent successfully"}
+
